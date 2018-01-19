@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 
 class History extends React.Component {
 
@@ -9,7 +10,7 @@ class History extends React.Component {
                 'Go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.props.onJump(move)}>{desc}</button>
+                    <button onClick={() => this.props.historyJump(move)}>{desc}</button>
                 </li>
             );
         })
@@ -25,4 +26,23 @@ class History extends React.Component {
     }
 }
 
-export default History;
+const mapStateToProps = state => {
+    return {
+        history : state.board.history,
+        status: state.board.history[state.board.stepNumber].status
+    }
+  }
+  
+  const mapDispatchToProps = dispatch => {
+    return {
+      historyJump : step => dispatch({
+        type : 'HISTORY_JUMP',
+        step : step
+      })
+    }
+  }
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(History)

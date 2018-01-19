@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 
 function Square(props) {
     return (
@@ -9,20 +10,21 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare(squareIndex) {
         return (
             <Square
-                value={this.props.squares[i]}
-                onClick={() => this.props.onClick(i)}
+                key={squareIndex}
+                value={this.props.squares[squareIndex]}
+                onClick={() => this.props.makePlay(squareIndex)}
             />
         );
     }
 
-    boardRow(i) {
-        let squares = [0, 1, 2].map(j => this.renderSquare(j + (i * 3)));
+    boardRow(rowIndex) {
+        let squares = [0, 1, 2].map(i => this.renderSquare(i + (rowIndex * 3)));
 
         return (
-            <div key={i} className="board-row">
+            <div key={rowIndex} className="board-row">
                 {squares}
             </div>
         )
@@ -41,4 +43,22 @@ class Board extends React.Component {
     }
 }
 
-export default Board;
+const mapStateToProps = state => {
+    return {
+        squares : state.board.history[state.board.stepNumber].squares
+    }
+  }
+  
+  const mapDispatchToProps = dispatch => {
+    return {
+      makePlay : squareIndex => dispatch({
+        type : 'MAKE_PLAY',
+        squareIndex : squareIndex
+      })
+    }
+  }
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Board)
