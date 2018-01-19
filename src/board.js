@@ -32,8 +32,10 @@ class Board extends React.Component {
         let rows = [0, 1, 2].map(i => this.boardRow(i));
 
         return (
-            <div>
-                {rows}
+            <div className="game-board">
+                <div>
+                    {rows}
+                </div>
             </div>
         );
     }
